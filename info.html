@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>프로젝트 기능 명세서 | 대화형 대시보드</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap">
+    <!-- Chosen Palette: "Calm Neutral" -->
+    <!-- Application Structure Plan: 
+        정적인 기술 보고서를 동적인 탐색 경험으로 전환하기 위해 대시보드 구조를 채택했습니다. 
+        핵심은 '대화형 아키텍처 다이어그램'으로, 사용자가 직접 클릭하며 각 컴포넌트의 역할을 이해할 수 있도록 설계했습니다. 
+        그 아래에는 탭 인터페이스를 통해 3가지 핵심 기능(지식 베이스, HTML 분석, AI 챗봇)의 상세 정보를 제공하여, 정보의 깊이를 더했습니다. 
+        마지막으로, 실제 발생했던 이슈와 해결 과정을 '문제 해결 사례'로 제시하여 프로젝트의 기술적 성숙도를 보여줍니다. 
+        이러한 비선형적 구조는 기술적 내용을 효과적으로 전달하고 사용자의 흥미를 유발하는 데 최적화되어 있습니다.
+    -->
+    <!-- Visualization & Content Choices:
+        - Project Architecture -> Goal: Organize/Relationships -> Viz: Interactive HTML/CSS Diagram -> Interaction: Click-to-display details -> Justification: 복잡한 데이터 흐름과 컴포넌트 간의 상호작용을 텍스트보다 시각적으로 명확하게 전달. -> Method: Tailwind CSS, Vanilla JS.
+        - Feature Details -> Goal: Inform/Organize -> Viz: Tabbed Interface -> Interaction: Click to switch views -> Justification: 각 기능의 상세 정보를 깔끔하게 분리하여 사용자가 원하는 정보에 집중할 수 있도록 구성. -> Method: Tailwind CSS, Vanilla JS.
+        - Troubleshooting -> Goal: Inform -> Viz: Case Study Block -> Interaction: Simple toggle (show/hide details) -> Justification: 문제 해결 과정을 구체적으로 보여주어 프로젝트의 신뢰성과 개발 역량을 강조. -> Method: HTML/CSS, Vanilla JS.
+        - Tech Stack -> Goal: Inform -> Viz: Grid Layout -> Interaction: None -> Justification: 프로젝트에 사용된 기술 스택을 한눈에 파악할 수 있도록 시각적으로 정리. -> Method: HTML/CSS.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: all 0.3s ease-in-out;
+        }
+        .diagram-box {
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            background-color: white;
+        }
+        .diagram-box.active {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            transform: translateY(-2px);
+        }
+        .arrow {
+            color: #6b7280;
+            font-size: 2rem;
+            line-height: 1;
+        }
+        .tab {
+            cursor: pointer;
+            padding: 0.75rem 1.25rem;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+        .tab.active {
+            border-bottom-color: #3b82f6;
+            color: #3b82f6;
+            font-weight: 700;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .tech-tag {
+            background-color: #e5e7eb;
+            color: #4b5563;
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+        }
+        .code-block {
+            background-color: #1f2937;
+            color: #d1d5db;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: monospace;
+            font-size: 0.875rem;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <main class="container mx-auto p-4 md:p-8 max-w-6xl">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-2">프로젝트 아키텍처 대시보드</h1>
+            <p class="text-lg text-gray-600">HTML 접근성 분석 및 AI 디자인 어시스턴트</p>
+        </header>
+
+        <!-- 대화형 아키텍처 다이어그램 -->
+        <section id="architecture" class="mb-16">
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-6 text-center">대화형 아키텍처</h2>
+            <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">아래 다이어그램의 각 요소를 클릭하여 상세한 역할과 구현 로직을 확인해보세요. 전체 시스템이 어떻게 유기적으로 동작하는지 쉽게 파악할 수 있습니다.</p>
+            
+            <div class="card p-6 md:p-8">
+                <!-- Diagram Visuals -->
+                <div class="grid grid-cols-1 md:grid-cols-3 items-center gap-4 text-center mb-8">
+                    <div id="diagram-frontend" class="diagram-box active">
+                        <span class="text-2xl">👤</span>
+                        <h3 class="font-bold mt-2">Frontend</h3>
+                        <p class="text-sm text-gray-500">HTML, CSS, JS</p>
+                    </div>
+                    <div class="arrow hidden md:block">→</div>
+                    <div id="diagram-backend" class="diagram-box">
+                        <span class="text-2xl">☁️</span>
+                        <h3 class="font-bold mt-2">Backend (Serverless)</h3>
+                        <p class="text-sm text-gray-500">Netlify Functions</p>
+                    </div>
+                    <div class="arrow md:hidden">↓</div>
+                    <div></div> <!-- Empty cell for grid layout -->
+                    <div class="arrow hidden md:block">↙ ↘</div>
+                    <div></div> <!-- Empty cell for grid layout -->
+                </div>
+                 <div class="grid grid-cols-1 md:grid-cols-3 items-start gap-4 text-center">
+                    <div></div>
+                     <div id="diagram-logic" class="diagram-box">
+                        <span class="text-2xl">⚙️</span>
+                        <h3 class="font-bold mt-2">Business Logic</h3>
+                        <p class="text-sm text-gray-500">분석 및 추천 로직</p>
+                    </div>
+                    <div></div>
+                </div>
+                <div class="flex justify-center items-center mt-4">
+                    <div class="arrow">↓</div>
+                </div>
+                 <div class="grid grid-cols-1 md:grid-cols-2 items-center gap-4 text-center mt-4">
+                    <div id="diagram-rules" class="diagram-box">
+                        <span class="text-2xl">📚</span>
+                        <h3 class="font-bold mt-2">Knowledge Base</h3>
+                        <p class="text-sm text-gray-500">JSON (Ground Truth)</p>
+                    </div>
+                    <div id="diagram-ai" class="diagram-box">
+                        <span class="text-2xl">🤖</span>
+                        <h3 class="font-bold mt-2">Generative AI</h3>
+                        <p class="text-sm text-gray-500">OpenAI API</p>
+                    </div>
+                </div>
+
+                <!-- Diagram Details -->
+                <div id="diagram-details" class="mt-8 p-6 bg-blue-50 border border-blue-200 rounded-lg min-h-[150px]">
+                    <!-- JS will populate this -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 기능별 상세 분석 -->
+        <section id="features" class="mb-16">
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center">기능별 상세 분석</h2>
+            <div class="card">
+                <div class="flex border-b border-gray-200">
+                    <div id="tab-kb" class="tab active">🧠 지식 베이스</div>
+                    <div id="tab-analyzer" class="tab">💻 HTML 분석기</div>
+                    <div id="tab-assistant" class="tab">🤖 AI 어시스턴트</div>
+                </div>
+                <div class="p-6 md:p-8">
+                    <!-- Knowledge Base Content -->
+                    <div id="content-kb" class="tab-content active">
+                        <h3 class="text-xl font-bold mb-4">RAG의 미니 DB: rules.json</h3>
+                        <p class="mb-4 text-gray-600">AI의 환각 현상을 방지하고 답변의 신뢰도를 확보하기 위해, WCAG 2.1 및 IRI 색채 시스템의 핵심 규칙을 `rules.json` 파일로 구조화했습니다. 이 파일은 AI가 생성하는 모든 결과물의 절대적 진실(Ground Truth)로 기능합니다.</p>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="tech-tag">JSON</span>
+                            <span class="tech-tag">RAG</span>
+                            <span class="tech-tag">Ground Truth</span>
+                        </div>
+                        <div class="code-block">
+{
+  "colorContrast": {
+    "normalText": { "aa": 4.5, "aaa": 7.0 },
+    "largeText": { "aa": 3.0, "aaa": 4.5, "sizeThreshold": 18 }
+  },
+  "fontRequirements": {
+    "minFontSize": { "mobile": 16, "desktop": 14 }
+  },
+  "semanticHTML": { ... }
+}
+                        </div>
+                    </div>
+                    <!-- HTML Analyzer Content -->
+                    <div id="content-analyzer" class="tab-content">
+                        <h3 class="text-xl font-bold mb-4">규칙 기반 HTML 접근성 분석</h3>
+                        <p class="mb-4 text-gray-600">AI를 사용하지 않는 순수 규칙 기반 분석 기능입니다. 사용자가 업로드한 HTML 파일을 서버에서 `Cheerio`로 파싱하고, `rules.json`에 명시된 폰트 크기, 명도 대비(`TinyColor2`), 시맨틱 태그 규칙 등을 코드 레벨에서 직접 연산하여 정량적 피드백을 생성합니다.</p>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="tech-tag">JavaScript</span>
+                            <span class="tech-tag">Cheerio</span>
+                            <span class="tech-tag">TinyColor2</span>
+                            <span class="tech-tag">규칙 기반</span>
+                        </div>
+                        <div class="code-block">
+// Cheerio를 사용한 HTML 파싱 예시
+const $ = cheerio.load(htmlContent);
+const h1Count = $('h1').length;
+
+// TinyColor2를 사용한 명도 대비 계산 예시
+const contrast = tinycolor.readability(color, bgColor);
+                        </div>
+                    </div>
+                    <!-- AI Assistant Content -->
+                    <div id="content-assistant" class="tab-content">
+                        <h3 class="text-xl font-bold mb-4">전문가 페르소나를 가진 AI 어시스턴트</h3>
+                        <p class="mb-4 text-gray-600">'디자인 팀장'이라는 명확한 역할을 System Prompt에 부여하여, 일관된 톤앤매너와 전문가 수준의 답변을 유도합니다. 모든 답변은 `rules.json`의 핵심 원칙을 기준으로 생성되도록 지시하여 답변의 전문성과 신뢰도를 높였습니다.</p>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="tech-tag">OpenAI API</span>
+                            <span class="tech-tag">System Prompt</span>
+                            <span class="tech-tag">페르소나</span>
+                        </div>
+                        <div class="code-block">
+// System Prompt 예시
+const SYSTEM_PROMPT = `
+당신은 웹 접근성과 사용자 경험을 전문으로 하는
+시니어 디자인 팀장입니다.
+...
+WCAG 2.1 및 IRI 색채 시스템에 대한
+깊은 이해를 바탕으로 조언해주세요.
+`;
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 배포 및 이슈 해결 -->
+        <section id="deployment" class="mb-16">
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center">배포 및 문제 해결 사례</h2>
+            <div class="card p-6 md:p-8">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-bold mb-2">CI/CD 파이프라인</h3>
+                        <p class="text-gray-600 mb-4">GitHub에 코드를 Push하면 Netlify가 자동으로 변경사항을 감지하여 빌드 및 배포를 수행하는 CI/CD 파이프라인을 구축했습니다. 이를 통해 빠르고 안정적인 업데이트가 가능합니다.</p>
+                        <div class="flex flex-wrap gap-2">
+                           <span class="tech-tag">Netlify</span>
+                           <span class="tech-tag">GitHub</span>
+                           <span class="tech-tag">Serverless</span>
+                           <span class="tech-tag">CI/CD</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-2 text-red-600">문제 해결: 502 서버 오류</h3>
+                        <p id="issue-summary" class="text-gray-600">배포 초기, 서버리스 함수 호출 시 간헐적으로 502 오류가 발생했습니다. <button id="toggle-issue-details" class="text-blue-600 font-semibold hover:underline">자세히 보기</button></p>
+                        <div id="issue-details" class="hidden mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                            <h4 class="font-bold mb-2">원인 분석</h4>
+                            <p class="text-sm text-gray-700 mb-2">Netlify 함수 로그를 분석한 결과, `File is not defined` 오류를 확인했습니다. 이는 최신 `openai` v4 라이브러리가 서버 환경(Node.js)과 호환되지 않아 발생하는 문제였습니다.</p>
+                            <h4 class="font-bold mb-2">해결 과정</h4>
+                            <p class="text-sm text-gray-700">안정성이 검증된 `openai` v3 라이브러리로 다운그레이드하고, v3 문법에 맞게 API 호출 코드를 수정하여 문제를 해결했습니다. 이 과정을 통해 서버 환경 호환성의 중요성을 파악할 수 있었습니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <footer class="text-center text-gray-500 mt-12">
+            <p>&copy; 2025 Interactive Project Dashboard. All rights reserved.</p>
+        </footer>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const diagramDetails = {
+                frontend: {
+                    title: '👤 Frontend (사용자 인터페이스)',
+                    description: '정적 파일(HTML, CSS, JS)로 구성된 순수 클라이언트 사이드 애플리케이션입니다. 사용자의 입력을 받아 Netlify Functions로 구성된 백엔드 API를 호출하는 역할을 담당합니다.',
+                    tech: ['HTML5', 'Tailwind CSS', 'Vanilla JS']
+                },
+                backend: {
+                    title: '☁️ Backend (서버리스 함수)',
+                    description: 'Netlify Functions를 활용하여 별도의 서버 관리 없이 백엔드 로직을 실행합니다. 각 기능은 독립된 함수(`analyze-html`, `ai-chatbot` 등)로 구현되어 확장성과 유지보수성을 높였습니다.',
+                    tech: ['Netlify Functions', 'Node.js', 'Serverless']
+                },
+                logic: {
+                    title: '⚙️ Business Logic (분석 및 추천)',
+                    description: '핵심 비즈니스 로직이 실행되는 부분입니다. 요청에 따라 규칙 기반의 HTML 분석을 수행하거나, OpenAI API를 호출하여 AI 기반의 디자인 추천 및 채팅 응답을 생성합니다.',
+                    tech: ['Cheerio', 'TinyColor2', 'OpenAI API']
+                },
+                rules: {
+                    title: '📚 Knowledge Base (JSON)',
+                    description: 'WCAG, IRI 등 핵심 규칙을 담고 있는 `rules.json` 파일입니다. HTML 분석기의 판단 기준이자, AI 어시스턴트 답변의 신뢰도를 보장하는 Ground Truth 역할을 수행하여 RAG 아키텍처의 핵심을 이룹니다.',
+                    tech: ['JSON', 'RAG', 'Ground Truth']
+                },
+                ai: {
+                    title: '🤖 Generative AI (OpenAI)',
+                    description: 'OpenAI의 GPT 모델을 사용하여 자연스러운 채팅 응답과 전문적인 디자인 개선안을 생성합니다. System Prompt를 통해 전문가 페르소나를 부여하고, Knowledge Base를 참고하여 답변의 일관성과 정확성을 제어합니다.',
+                    tech: ['OpenAI API', 'GPT-3.5-Turbo', 'System Prompt']
+                }
+            };
+
+            const diagramBoxes = document.querySelectorAll('.diagram-box');
+            const detailsContainer = document.getElementById('diagram-details');
+
+            function updateDetails(key) {
+                const detail = diagramDetails[key];
+                if (!detail) return;
+
+                let techHtml = detail.tech.map(t => `<span class="tech-tag">${t}</span>`).join(' ');
+
+                detailsContainer.innerHTML = `
+                    <h3 class="text-lg font-bold text-blue-800 mb-2">${detail.title}</h3>
+                    <p class="text-blue-900/80 mb-4">${detail.description}</p>
+                    <div class="flex flex-wrap gap-2">${techHtml}</div>
+                `;
+            }
+
+            diagramBoxes.forEach(box => {
+                box.addEventListener('click', () => {
+                    diagramBoxes.forEach(b => b.classList.remove('active'));
+                    box.classList.add('active');
+                    const key = box.id.replace('diagram-', '');
+                    updateDetails(key);
+                });
+            });
+
+            // Initial state
+            updateDetails('frontend');
+
+            // Tab functionality
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const targetId = tab.id.replace('tab-', 'content-');
+                    
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+
+                    tabContents.forEach(content => {
+                        if (content.id === targetId) {
+                            content.classList.add('active');
+                        } else {
+                            content.classList.remove('active');
+                        }
+                    });
+                });
+            });
+
+            // Issue details toggle
+            const toggleButton = document.getElementById('toggle-issue-details');
+            const issueDetails = document.getElementById('issue-details');
+            toggleButton.addEventListener('click', () => {
+                const isHidden = issueDetails.classList.contains('hidden');
+                if (isHidden) {
+                    issueDetails.classList.remove('hidden');
+                    toggleButton.textContent = '간략히 보기';
+                } else {
+                    issueDetails.classList.add('hidden');
+                    toggleButton.textContent = '자세히 보기';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
